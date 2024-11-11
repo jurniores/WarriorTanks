@@ -15,47 +15,44 @@ public partial class PropertyClient : PropertiesBase
     {
         if (IsLocalPlayer) uI = NetworkService.Get<UI>();
         tankClient = Identity.Get<TankClient>();
-
     }
 
-    protected override void AttClientName(string nameTank)
+    protected override void OnBaseNameTankChanged(string prevNameTank, string nextNameTank, bool isWriting)
     {
-        uIPlayer.SetName(nameTank);
+        uIPlayer.SetName(nextNameTank);
     }
 
-    protected override void AttClientHp(float hpChange)
+    protected override void OnBaseHpTotalChanged(int prevHpTotal, int nextHpTotal, bool isWriting)
     {
-        uIPlayer.Demage(hpChange);
+        uIPlayer.SetHp(nextHpTotal);
+        if (!IsLocalPlayer) return;
+        uI.setHpTotal(nextHpTotal);
+    }
+    protected override void OnBaseHpChanged(int prevHp, int nextHp, bool isWriting)
+    {
+        uIPlayer.Demage(nextHp);
 
-        if (hpChange <= 0)
+        if (nextHp <= 0)
         {
             anim.Play("explosion");
             tankClient.enabled = false;
             //Implementar outras coisas quando acabar
         }
-        
-        if (!IsLocalPlayer) return;
-        uI.SetHp(hpChange);
 
-    }
-    protected override void AttClientHpTotal(float hpTotal)
-    {
-        uIPlayer.SetHp(hpTotal);
         if (!IsLocalPlayer) return;
-        uI.setHpTotal(hpTotal);
+        uI.SetHp(nextHp);
     }
-    protected override void AttClientBulletPent(int variableChange)
+
+    protected override void OnBaseBulletPentChanged(int prevBulletPent, int nextBulletPent, bool isWriting)
     {
         if (!IsLocalPlayer) return;
-        uI.MinusBullet(variableChange);
+        uI.MinusBullet(nextBulletPent);
     }
-    protected override void AttClientBulletTotal(int variableChange)
+
+    protected override void OnBaseBulletTotalChanged(int prevBulletTotal, int nextBulletTotal, bool isWriting)
     {
         if (!IsLocalPlayer) return;
-        uI.SetPent(variableChange);
+        uI.SetPent(nextBulletTotal);
     }
-    protected override void AttClientDano(float variableChange)
-    {
-        //Implementar
-    }
+   
 }
