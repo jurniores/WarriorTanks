@@ -11,7 +11,7 @@ public class TankServer : TankBase
     private void Update()
     {
         HeadRotate(angleTank);
-
+        m_MoveNow = transform.position;
         Vector2 targetVelocity = Move * moveSpeed;
 
         Vector2 smoothVelocity = Vector2.SmoothDamp(currentVelocity, targetVelocity, ref currentVelocity, smoothTime);

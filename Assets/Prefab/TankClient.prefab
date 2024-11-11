@@ -76,12 +76,6 @@ MonoBehaviour:
   m_ServiceName: PropertyClient
   m_Id: 0
   m_BindingFlags: 36
-  m_NameTank: 
-  m_Hp: 100
-  m_HpTotal: 100
-  m_Dano: 7
-  m_BulletPent: 10
-  m_BulletTotal: 50
   nameTextPro: {fileID: 2323579993722774154}
   uIPlayer: {fileID: 7541441624686725470}
   anim: {fileID: 594299552520616624}

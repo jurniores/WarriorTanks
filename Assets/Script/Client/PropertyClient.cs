@@ -16,7 +16,6 @@ public partial class PropertyClient : PropertiesBase
         if (IsLocalPlayer) uI = NetworkService.Get<UI>();
         tankClient = Identity.Get<TankClient>();
     }
-
     protected override void OnBaseNameTankChanged(string prevNameTank, string nextNameTank, bool isWriting)
     {
         uIPlayer.SetName(nextNameTank);

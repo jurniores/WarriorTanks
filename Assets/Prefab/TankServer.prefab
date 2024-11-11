@@ -184,12 +184,6 @@ MonoBehaviour:
   m_ServiceName: PropertyServer
   m_Id: 0
   m_BindingFlags: 38
-  m_NameTank: 
-  m_Hp: 100
-  m_HpTotal: 100
-  m_Dano: 7
-  m_BulletPent: 10
-  m_BulletTotal: 50
 --- !u!114 &7751532043151651670
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -135,7 +135,6 @@ namespace Omni.Core
 		// never override this method!
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[Obsolete("Don't override this method! The source generator will override it.")]
-		[Conditional("UNITY_EDITOR")]
 		protected virtual void ___NotifyChange___() { }
 
 		/// <summary>
