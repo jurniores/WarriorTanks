@@ -9,12 +9,10 @@ public partial class PropertyClient : PropertiesBase
     [SerializeField]
     private UIPlayer uIPlayer;
     [SerializeField] Animator anim;
-    private TankClient tankClient;
-    private UI uI;
+    public UI uI;
     protected override void OnStart()
     {
         if (IsLocalPlayer) uI = NetworkService.Get<UI>();
-        tankClient = Identity.Get<TankClient>();
     }
     protected override void OnBaseNameTankChanged(string prevNameTank, string nextNameTank, bool isWriting)
     {
@@ -34,8 +32,7 @@ public partial class PropertyClient : PropertiesBase
         if (nextHp <= 0)
         {
             anim.Play("explosion");
-            tankClient.enabled = false;
-            //Implementar outras coisas quando acabar
+            tankBase.enabled = false;
         }
 
         if (!IsLocalPlayer) return;
@@ -45,13 +42,31 @@ public partial class PropertyClient : PropertiesBase
     protected override void OnBaseBulletPentChanged(int prevBulletPent, int nextBulletPent, bool isWriting)
     {
         if (!IsLocalPlayer) return;
-        uI.MinusBullet(nextBulletPent);
+        uI.BulletPent(nextBulletPent);
     }
-
+    protected override void OnBaseExpChanged(float prevExp, float nextExp, bool isWriting)
+    {
+        if(IsLocalPlayer)uI.SetExp(nextExp);
+    }
+    protected override void OnBaseLevelChanged(int prevLevel, int nextLevel, bool isWriting)
+    {
+        if(IsLocalPlayer)uI.SetLvl(nextLevel);
+        uIPlayer.SetLvl(nextLevel);
+    }
     protected override void OnBaseBulletTotalChanged(int prevBulletTotal, int nextBulletTotal, bool isWriting)
     {
         if (!IsLocalPlayer) return;
         uI.SetPent(nextBulletTotal);
     }
-   
+    protected override void OnBaseCowntDownBulletReddyChanged(bool prevCowntDownBulletReddy, bool nextCowntDownBulletReddy, bool isWriting)
+    {
+        if (!nextCowntDownBulletReddy)
+        {
+            if(IsLocalPlayer)uI.cowntDown(m_CountDown);
+            uIPlayer.MpAction(m_CountDown);
+        }
+
+    }
+
+
 }

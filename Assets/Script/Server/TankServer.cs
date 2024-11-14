@@ -28,6 +28,16 @@ public class TankServer : TankBase
     void RecieveMoveRpcServer(DataBuffer buffer, NetworkPeer peer)
     {
         Move = buffer.Read<HalfVector2>();
+        Vector2 positionClient = buffer.Read<HalfVector2>();
+        
+        if (Vector2.Distance(transform.position, positionClient) > 1.5f)
+        {
+            buffer.SeekToBegin();
+            buffer.Write((HalfVector2)(Vector2)transform.position);
+            Remote.Invoke(ConstantsGame.TANK_CORRECT_MOVIMENT, buffer, Target.GroupMembers);
+        }
+
+
         // Usa DOTween para rotacionar suavemente o objeto na direção do movimento
     }
 
@@ -40,16 +50,18 @@ public class TankServer : TankBase
     [Server(ConstantsGame.TANK_BULLET)]
     void RecieveBulletRpcServer(DataBuffer buffer, NetworkPeer peer)
     {
+        if(!propertiesBase.CowntDownBulletReddy || propertiesBase.BulletTotal < 0) return;
+        
         Vector2 dir = buffer.Read<HalfVector2>();
 
         var bulletBase = NetworkManager.GetPrefab(2).SpawnOnServer(peer).Get<BulletBase>();
         bulletBase.transform.position = mira.position;
         bulletBase.SetDirection(dir.normalized, propertiesBase);
-
+        ((PropertyServer)propertiesBase).Shot();
         buffer.SeekToBegin();
         buffer.WriteIdentity(bulletBase.Identity);
         buffer.Write((HalfVector2)dir);
-        Remote.Invoke(ConstantsGame.TANK_BULLET, buffer);
+        Remote.Invoke(ConstantsGame.TANK_BULLET, buffer, Target.GroupMembers);
     }
 
     public override void OnTick(ITickInfo data)

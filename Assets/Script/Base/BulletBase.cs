@@ -17,6 +17,12 @@ public partial class BulletBase : NetworkBehaviour
 
     private bool collide;
 
+    protected async override void OnStart()
+    {
+        await UniTask.WaitForSeconds(5);
+        if (this != null && IsServer) Identity.Destroy(Target.GroupMembers);
+    }
+
     void Update()
     {
         // Verifica se algum objeto colidiu com a bala
@@ -36,19 +42,21 @@ public partial class BulletBase : NetworkBehaviour
 
     async void OnHitObject(Collider2D collider)
     {
-        print("Colidi com " + collider.name);
         if (collider.CompareTag("Player"))
         {
-            PropertiesBase pEnemy = collider.GetComponent<PropertiesBase>();
-            print(pEnemy.NameTank);
-            pEnemy.Hp -= propertyServer.Dano;
-            Remote.Invoke(ConstantsGame.TANK_BULLET_DEMAGE, DataBuffer.Empty, Target.GroupMembers);
-            speed = 0;
-            await UniTask.WaitForSeconds(2);
-            Identity.Destroy(Target.GroupMembers);
+            PropertyServer pEnemy = (PropertyServer)collider.GetComponent<PropertiesBase>();
+            pEnemy.Demage(propertyServer.Dano, propertyServer);
         }
+        speed = 0;
+        Remote.Invoke(ConstantsGame.TANK_BULLET_DEMAGE, DataBuffer.Empty, Target.GroupMembers);
+        await UniTask.WaitForSeconds(2);
+        Identity.Destroy(Target.GroupMembers);
+        
     }
-
+    public void DisableBullet()
+    {
+        gameObject.SetActive(false);
+    }
     void OnDrawGizmosSelected()
     {
         // Desenha o raio de detecção no editor para depuração
@@ -63,11 +71,6 @@ public partial class BulletBase : NetworkBehaviour
 
         float bulletAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, bulletAngle);
-    }
-    void OnBecameInvisible()
-    {
-        // Destroi a bala quando sai da tela para evitar sobrecarga de memória
-        Destroy(gameObject);
     }
 
     [Client(ConstantsGame.TANK_BULLET_DEMAGE)]

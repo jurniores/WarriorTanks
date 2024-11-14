@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ServerLogin : ServerBehaviour
 {
+    [SerializeField]
+    private Transform spawn1, spawn2;
     private Dictionary<int, EntityList> EntityListDic = new();
     NetworkMatchmaking Matchmaking;
     NetworkGroup group;
@@ -18,7 +20,7 @@ public class ServerLogin : ServerBehaviour
     {
         if (phase == Phase.Begin)
         {
-            int identityId  = EntityListDic[peer.Id].identityId;
+            int identityId = EntityListDic[peer.Id].identityId;
             var identity = NetworkManager.Server.GetIdentity(identityId);
             identity.Destroy();
         }
@@ -30,7 +32,7 @@ public class ServerLogin : ServerBehaviour
         Matchmaking.Server.JoinGroup(group, peer);
         var identity = NetworkManager.GetPrefab(0).SpawnOnServer(peer);
         var playerServer = identity.Get<PropertyServer>();
-
+        playerServer.transform.position = EntityListDic.Count % 2 == 0 ? spawn1.position : spawn2.position;
         string name = buffer.ReadString();
         playerServer.SetInfo(name);
 
@@ -48,7 +50,8 @@ public class ServerLogin : ServerBehaviour
         {
             peerId = peer.Id,
             identityId = identity.IdentityId,
-            nameTank = name
+            nameTank = name,
+            team = EntityListDic.Count
         });
     }
 

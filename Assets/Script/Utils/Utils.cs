@@ -1,3 +1,4 @@
+using System;
 using MemoryPack;
 
 [MemoryPackable]
@@ -5,9 +6,16 @@ public partial class EntityList
 {
     public int peerId;
     public int identityId;
+    public int team;
     public string nameTank;
 }
 
+[Serializable]
+public struct Levels
+{
+    public int hpTotal, dano, bulletTotal, bulletPent;
+    public float cowntDown;
+}
 public struct JoysTick
 {
     public bool w, a, s, d;

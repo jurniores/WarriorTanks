@@ -30,10 +30,10 @@ public partial class TankBase : NetworkBehaviour
         };
     }
 
-   
+
     public void HeadRotate(float angle)
     {
-        if (!IsLocalPlayer) rotationDuration = 0.05f;
+        if (!IsLocalPlayer) rotationDuration = 0.1f;
         rotateHeadTank.DORotate(Vector3.forward * angle, rotationDuration, RotateMode.Fast);
     }
 
@@ -46,8 +46,8 @@ public partial class TankBase : NetworkBehaviour
 
     partial void OnMoveNowChanged(Vector2 prevMoveNow, Vector2 nextMoveNow, bool isWriting)
     {
-        if (!isWriting && !IsLocalPlayer)
-        {            
+        if (!isWriting)
+        {
             transform.position = nextMoveNow;
         }
     }

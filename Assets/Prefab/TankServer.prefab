@@ -166,7 +166,7 @@ MonoBehaviour:
   rotateHeadTank: {fileID: 8606178663341609621}
   mira: {fileID: 1040804012873880975}
   tankRotate: {fileID: 8606178664823677642}
-  rotationDuration: 0.05
+  rotationDuration: 0.1
   moveSpeed: 5
   smoothTime: 1.5
 --- !u!114 &2113164111875035594
@@ -184,6 +184,88 @@ MonoBehaviour:
   m_ServiceName: PropertyServer
   m_Id: 0
   m_BindingFlags: 38
+  tankBase: {fileID: 8739307045784761261}
+  levels:
+  - hpTotal: 100
+    dano: 10
+    bulletTotal: 50
+    bulletPent: 10
+    cowntDown: 2
+  - hpTotal: 105
+    dano: 10
+    bulletTotal: 50
+    bulletPent: 10
+    cowntDown: 1.9
+  - hpTotal: 110
+    dano: 11
+    bulletTotal: 50
+    bulletPent: 10
+    cowntDown: 1.8
+  - hpTotal: 113
+    dano: 11
+    bulletTotal: 50
+    bulletPent: 10
+    cowntDown: 1.7
+  - hpTotal: 120
+    dano: 12
+    bulletTotal: 60
+    bulletPent: 12
+    cowntDown: 1.5
+  - hpTotal: 125
+    dano: 12
+    bulletTotal: 60
+    bulletPent: 12
+    cowntDown: 1.5
+  - hpTotal: 130
+    dano: 15
+    bulletTotal: 70
+    bulletPent: 15
+    cowntDown: 1
+  - hpTotal: 130
+    dano: 15
+    bulletTotal: 70
+    bulletPent: 15
+    cowntDown: 0.9
+  - hpTotal: 150
+    dano: 18
+    bulletTotal: 80
+    bulletPent: 20
+    cowntDown: 0.8
+  - hpTotal: 160
+    dano: 22
+    bulletTotal: 85
+    bulletPent: 22
+    cowntDown: 0.7
+  - hpTotal: 180
+    dano: 25
+    bulletTotal: 90
+    bulletPent: 26
+    cowntDown: 0.6
+  - hpTotal: 200
+    dano: 30
+    bulletTotal: 100
+    bulletPent: 30
+    cowntDown: 0.5
+  - hpTotal: 220
+    dano: 40
+    bulletTotal: 110
+    bulletPent: 35
+    cowntDown: 0.46
+  - hpTotal: 240
+    dano: 45
+    bulletTotal: 120
+    bulletPent: 40
+    cowntDown: 0.44
+  - hpTotal: 260
+    dano: 50
+    bulletTotal: 125
+    bulletPent: 45
+    cowntDown: 0.4
+  - hpTotal: 300
+    dano: 60
+    bulletTotal: 140
+    bulletPent: 50
+    cowntDown: 0.3
 --- !u!114 &7751532043151651670
 MonoBehaviour:
   m_ObjectHideFlags: 0

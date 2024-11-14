@@ -6,13 +6,13 @@ using Omni.Core;
 public class UI : ServiceBehaviour
 {
     [SerializeField]
-    private TextMeshProUGUI bulletText, hpText, timeBulletCowntDownText;
+    private TextMeshProUGUI bulletText, hpText, timeBulletCowntDownText, lvlTxt, expTxt;
     [SerializeField]
     private Image imageCowntDown, imageCowntdownSlide;
     [SerializeField]
     private float vel = 1;
 
-    private float time, timeInitial;
+    private float time, timeInitial, timeCd, timeCdInitial;
     private int bullet, bulletTotal;
     private float hpTotal, hp;
     // Update is called once per frame
@@ -28,8 +28,20 @@ public class UI : ServiceBehaviour
                 imageCowntDown.gameObject.SetActive(false);
             }
         }
-    }
 
+        if (timeCd <= timeCdInitial)
+        {
+            timeCd += Time.deltaTime;
+            timeBulletCowntDownText.text = timeCd.ToString("F1");
+        }
+    }
+    public void SetExp(float exp){
+        expTxt.text = $"Exp: {exp}";
+    }
+    public void SetLvl(int lvl)
+    {
+        lvlTxt.text = $"Level: {lvl}";
+    }
     public void SetTimeSlide(float time)
     {
         this.time = time;
@@ -42,10 +54,14 @@ public class UI : ServiceBehaviour
         bulletTotal = bulletPent;
         bulletText.text = $"{bullet}/{bulletTotal}";
     }
-
-    public void MinusBullet(int bullet)
+    public void BulletPent(int bullet)
     {
         this.bullet = bullet;
+        bulletText.text = $"{bullet}/{bulletTotal}";
+    }
+    public void MinusBullet()
+    {
+        bullet -= 1;
         bulletText.text = $"{bullet}/{bulletTotal}";
     }
     public void SetHp(float hp)
@@ -57,6 +73,12 @@ public class UI : ServiceBehaviour
     {
         this.hpTotal = hpTotal;
         hpText.text = $"{hp}/{hpTotal}";
+    }
+    public void cowntDown(float cowntDownMp)
+    {
+        timeCdInitial = cowntDownMp;
+        timeCd = 0;
+        timeBulletCowntDownText.text = "0";
     }
 
 }

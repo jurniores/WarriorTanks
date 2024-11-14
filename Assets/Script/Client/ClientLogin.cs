@@ -48,7 +48,6 @@ public class ClientLogin : ClientBehaviour
 
         foreach (var player in players.Values)
         {
-            print("Instanciando todos");
             SpawnOnClient(player.peerId, player.identityId);
         }
     }

@@ -13,6 +13,10 @@ public class TankClient : TankBase
     private Vector2 currentVelocity = Vector2.zero;
     private Vector2 directionToMouse;
 
+    protected override void OnStart()
+    {
+        if (IsLocalPlayer) Camera.main.transform.SetParent(transform);
+    }
 
     void Update()
     {
@@ -49,7 +53,7 @@ public class TankClient : TankBase
 
         directionToMouse = (mousePosition - transform.position).normalized;
         angleTank = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg;
-        
+
     }
     void GetInputs()
     {
@@ -83,14 +87,17 @@ public class TankClient : TankBase
 
         if (move != lastMove)
         {
-            print(move);
             lastMove = move;
-            Local.Invoke(ConstantsGame.TANK_MOVE, (HalfVector2)move);
+
+            Local.Invoke(ConstantsGame.TANK_MOVE, (HalfVector2)move, (HalfVector2)(Vector2)transform.position);
         }
     }
     void BulletSendServer()
     {
-        Local.Invoke(ConstantsGame.TANK_BULLET, (HalfVector2)directionToMouse);
+        if (!propertiesBase.CowntDownBulletReddy) return;
+        using var buffer = NetworkManager.Pool.Rent();
+        buffer.Write((HalfVector2)directionToMouse);
+        Local.Invoke(ConstantsGame.TANK_BULLET, buffer);
     }
 
     [Client(ConstantsGame.TANK_BULLET)]
@@ -102,7 +109,11 @@ public class TankClient : TankBase
         var bulletBase = NetworkManager.GetPrefab(2).SpawnOnClient(peerId, identityId).Get<BulletBase>();
         bulletBase.transform.position = mira.position;
 
-        if (IsLocalPlayer) bulletBase.SetDirection(directionToMouse.normalized, propertiesBase);
+        if (IsLocalPlayer)
+        {
+            bulletBase.SetDirection(directionToMouse.normalized, propertiesBase);
+            ((PropertyClient)propertiesBase).uI.MinusBullet();
+        }
         else bulletBase.SetDirection(dir.normalized, propertiesBase);
 
         Anim.Play("null");
@@ -130,5 +141,12 @@ public class TankClient : TankBase
         using var buffer = NetworkManager.Pool.Rent();
         buffer.Write((Half)rotateHeadTank.eulerAngles.z);
         Local.Invoke(ConstantsGame.TANK_MOVE_ROT, buffer);
+    }
+
+    [Client(ConstantsGame.TANK_CORRECT_MOVIMENT)]
+    void RPCCorrectMovimentClient(DataBuffer buffer)
+    {
+        Vector2 correctMoviment = buffer.Read<HalfVector2>();
+        transform.position = correctMoviment;
     }
 }
