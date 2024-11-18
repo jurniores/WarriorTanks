@@ -228,9 +228,12 @@ MonoBehaviour:
   m_Id: 0
   m_BindingFlags: 36
   tankBase: {fileID: 6263804925143270489}
+  m_Death: 0
+  m_Team: 0
   nameTextPro: {fileID: 2323579993722774154}
   uIPlayer: {fileID: 7541441624686725470}
   anim: {fileID: 594299552520616624}
+  panelMorte: {fileID: 0}
   uI: {fileID: 0}
 --- !u!114 &7541441624686725470
 MonoBehaviour:

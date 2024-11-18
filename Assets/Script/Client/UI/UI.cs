@@ -15,6 +15,7 @@ public class UI : ServiceBehaviour
     private float time, timeInitial, timeCd, timeCdInitial;
     private int bullet, bulletTotal;
     private float hpTotal, hp;
+    private float exp, expTotal;
     // Update is called once per frame
     void Update()
     {
@@ -36,12 +37,19 @@ public class UI : ServiceBehaviour
         }
     }
     public void SetExp(float exp){
-        expTxt.text = $"Exp: {exp}";
+        this.exp = exp;
+        expTxt.text = $"Exp: {exp}/{expTotal}";
+    }
+    public void SetExpTotal(int expTotal)
+    {
+        this.expTotal = expTotal;
+        expTxt.text = $"Exp: {exp}/{expTotal}";
     }
     public void SetLvl(int lvl)
     {
         lvlTxt.text = $"Level: {lvl}";
     }
+    
     public void SetTimeSlide(float time)
     {
         this.time = time;

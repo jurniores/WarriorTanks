@@ -14,12 +14,16 @@ public class ClientLogin : ClientBehaviour
     private Button button;
     [SerializeField]
     private GameObject panel;
+    [SerializeField]
+    private Dictionary<int, TankClient> listTankClient = new();
+    private GameInfo gameInfo;
     public Texture2D cursorTexture;
 
     protected override void OnStart()
     {
         SetCurtor(false);
         button.onClick.AddListener(Login);
+        gameInfo = NetworkService.Get<GameInfo>();
     }
 
     private void Login()
@@ -45,6 +49,10 @@ public class ClientLogin : ClientBehaviour
     void LoginRpcAllClient(DataBuffer buffer)
     {
         var players = buffer.ReadAsBinary<Dictionary<int, EntityList>>();
+        buffer.ReadIdentity(out var peerId, out var identityId);
+
+        //Instanciando a bomba
+        NetworkManager.GetPrefab(3).SpawnOnClient(peerId, identityId);
 
         foreach (var player in players.Values)
         {
@@ -52,12 +60,23 @@ public class ClientLogin : ClientBehaviour
         }
     }
 
+    [Client(ConstantsGame.START_GAME)]
+    void StartGameClientRPC(DataBuffer buffer)
+    {
+        int time = buffer.Read<int>();
+        gameInfo.SetInfoTime(time);
+    }
+
+    [Client(ConstantsGame.END_GAME)]
+    void EndGameClientRPC(DataBuffer buffer)
+    {
+        print("FINAL DO GAME");
+    }
 
     void SpawnOnClient(int peerId, int identityId)
     {
         NetworkManager.GetPrefab(1).SpawnOnClient(peerId, identityId);
     }
-
 
     public void SetCurtor(bool active)
     {

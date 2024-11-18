@@ -132,7 +132,7 @@ MonoBehaviour:
   detectionRadius: 0.29
   targetLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 9
 --- !u!114 &85067218425946536
 MonoBehaviour:
   m_ObjectHideFlags: 0

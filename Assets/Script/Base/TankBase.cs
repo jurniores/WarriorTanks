@@ -51,4 +51,9 @@ public partial class TankBase : NetworkBehaviour
             transform.position = nextMoveNow;
         }
     }
+
+    public void Reposition(Transform posInitial)
+    {
+        MoveNow = posInitial.position;
+    }
 }

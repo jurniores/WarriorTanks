@@ -51,13 +51,13 @@ public class TankServer : TankBase
     void RecieveBulletRpcServer(DataBuffer buffer, NetworkPeer peer)
     {
         if(!propertiesBase.CowntDownBulletReddy || propertiesBase.BulletTotal < 0) return;
-        
+        if(!((PropertyServer)propertiesBase).Shot()) return;
         Vector2 dir = buffer.Read<HalfVector2>();
 
         var bulletBase = NetworkManager.GetPrefab(2).SpawnOnServer(peer).Get<BulletBase>();
         bulletBase.transform.position = mira.position;
         bulletBase.SetDirection(dir.normalized, propertiesBase);
-        ((PropertyServer)propertiesBase).Shot();
+        
         buffer.SeekToBegin();
         buffer.WriteIdentity(bulletBase.Identity);
         buffer.Write((HalfVector2)dir);

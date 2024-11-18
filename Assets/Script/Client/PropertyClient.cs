@@ -9,16 +9,34 @@ public partial class PropertyClient : PropertiesBase
     [SerializeField]
     private UIPlayer uIPlayer;
     [SerializeField] Animator anim;
+    [SerializeField] private PanelMorte panelMorte;
     public UI uI;
     protected override void OnStart()
     {
-        if (IsLocalPlayer) uI = NetworkService.Get<UI>();
+        if (IsLocalPlayer)
+        {
+            panelMorte = NetworkService.Get<PanelMorte>();
+            uI = NetworkService.Get<UI>();
+        }
     }
     protected override void OnBaseNameTankChanged(string prevNameTank, string nextNameTank, bool isWriting)
     {
         uIPlayer.SetName(nextNameTank);
     }
-
+    protected override void OnBaseDeathChanged(bool prevDeath, bool nextDeath, bool isWriting)
+    {
+        if (nextDeath == true)
+        {
+            if (IsLocalPlayer) panelMorte.SetTimeDeath(5);
+        }
+        else
+        {
+            if (IsLocalPlayer) panelMorte.ClosePanelDeath();
+            print("Ressugiu");
+            anim.Play("normal");
+            tankBase.enabled = true;
+        }
+    }
     protected override void OnBaseHpTotalChanged(int prevHpTotal, int nextHpTotal, bool isWriting)
     {
         uIPlayer.SetHp(nextHpTotal);
@@ -46,11 +64,12 @@ public partial class PropertyClient : PropertiesBase
     }
     protected override void OnBaseExpChanged(float prevExp, float nextExp, bool isWriting)
     {
-        if(IsLocalPlayer)uI.SetExp(nextExp);
+        print(nextExp);
+        if (IsLocalPlayer) uI.SetExp(nextExp);
     }
     protected override void OnBaseLevelChanged(int prevLevel, int nextLevel, bool isWriting)
     {
-        if(IsLocalPlayer)uI.SetLvl(nextLevel);
+        if (IsLocalPlayer) uI.SetLvl(nextLevel);
         uIPlayer.SetLvl(nextLevel);
     }
     protected override void OnBaseBulletTotalChanged(int prevBulletTotal, int nextBulletTotal, bool isWriting)
@@ -58,15 +77,16 @@ public partial class PropertyClient : PropertiesBase
         if (!IsLocalPlayer) return;
         uI.SetPent(nextBulletTotal);
     }
+    protected override void OnBaseExpUpChanged(int prevExpUp, int nextExpUp, bool isWriting)
+    {
+        if (IsLocalPlayer) uI.SetExpTotal(nextExpUp);
+    }
     protected override void OnBaseCowntDownBulletReddyChanged(bool prevCowntDownBulletReddy, bool nextCowntDownBulletReddy, bool isWriting)
     {
         if (!nextCowntDownBulletReddy)
         {
-            if(IsLocalPlayer)uI.cowntDown(m_CountDown);
+            if (IsLocalPlayer) uI.cowntDown(m_CountDown);
             uIPlayer.MpAction(m_CountDown);
         }
-
     }
-
-
 }
