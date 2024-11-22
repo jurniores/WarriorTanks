@@ -10,7 +10,7 @@ public class TankServer : TankBase
     private Vector2 currentVelocity = Vector2.zero;
     private void Update()
     {
-        HeadRotate(angleTank);
+        HeadRotateServer(angleTank);
         m_MoveNow = transform.position;
         Vector2 targetVelocity = Move * moveSpeed;
 

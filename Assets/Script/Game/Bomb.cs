@@ -11,11 +11,12 @@ public partial class Bomb : NetworkBehaviour
     private TankClient tankClient;
     [SerializeField]
     private float distance = 0, vel;
-
+    [SerializeField]
     [NetworkVariable]
     private int m_Team;
     [NetworkVariable]
     private Vector3 m_InitialPosition;
+    public GroupManager groupManager;
     public float detectionRadius = 0.5f; // Raio de detecção ao redor da bala
     public LayerMask targetLayer; // Camada dos objetos que queremos detectar
     private NetworkGroup group;
@@ -111,6 +112,7 @@ public partial class Bomb : NetworkBehaviour
         {
             using var buffer = NetworkManager.Pool.Rent();
             tankServer = hit.GetComponent<TankServer>();
+            print(tankServer);
             buffer.Write(tankServer.IdentityId);
             Remote.Invoke(ConstantsGame.BOMB_PLAYER_TRIGGER, buffer, groupId: Group.Id);
         }
@@ -120,7 +122,7 @@ public partial class Bomb : NetworkBehaviour
             if (spawn.team != Team)
             {
                 //Lógica de vitória e derrota
-                print("Jogo acabou");
+                Remote.Invoke(ConstantsGame.END_GAME);
             }
         }
     }
@@ -130,6 +132,11 @@ public partial class Bomb : NetworkBehaviour
         // Desenha o raio de detecção no editor para depuração
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+    }
+    [Client(ConstantsGame.END_GAME)]
+    void EndGameBombRPC(DataBuffer buffer)
+    {
+        groupManager.EndGame(true);
     }
 
     [Client(ConstantsGame.BOMB_PLAYER_TRIGGER)]

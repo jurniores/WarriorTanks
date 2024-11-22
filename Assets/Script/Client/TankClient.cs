@@ -12,7 +12,6 @@ public class TankClient : TankBase
     public float smoothTime = 1.5f;
     private Vector2 currentVelocity = Vector2.zero;
     private Vector2 directionToMouse;
-
     protected override void OnStart()
     {
         if (IsLocalPlayer) Camera.main.transform.SetParent(transform);
@@ -148,5 +147,33 @@ public class TankClient : TankBase
     {
         Vector2 correctMoviment = buffer.Read<HalfVector2>();
         transform.position = correctMoviment;
+    }
+
+    public void FinishGame(int team, bool teamCounter)
+    {
+        if (!IsLocalPlayer) return;
+        var panelWin = NetworkService.Get<PanelWin>();
+        if (teamCounter)
+        {
+            if (propertiesBase.Team != team)
+            {
+                panelWin.SetWinLose(true);
+            }
+            else
+            {
+                panelWin.SetWinLose(false);
+            }
+        }
+        else
+        {
+            if (propertiesBase.Team == team)
+            {
+                panelWin.SetWinLose(true);
+            }
+            else
+            {
+                panelWin.SetWinLose(false);
+            }
+        }
     }
 }

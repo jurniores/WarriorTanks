@@ -8,72 +8,49 @@ public class ServerLogin : ServerBehaviour
 {
     [SerializeField]
     private Transform spawn1, spawn2;
-    private Dictionary<int, EntityList> EntityListDic = new();
+    [SerializeField]
+    private float timeBattle = 60;
+    [SerializeField]
+    private List<NetworkPeer> PlayerWaitForGame = new();
     private float time = 10;
-    private Bomb bomb;
-    NetworkMatchmaking Matchmaking;
-    NetworkGroup group;
-    protected override void OnServerStart()
-    {
-        Matchmaking = NetworkManager.Matchmaking;
-        bomb = NetworkManager.GetPrefab(3).SpawnOnServer(NetworkManager.Server.ServerPeer).Get<Bomb>();
+    GroupManagerServer groupAtual;
+    [SerializeField]
+    private int qtdPlayers;
 
-        group = Matchmaking.Server.AddGroup("groupInitial");
-        bomb.Group = group;
-    }
-    protected override void OnServerPeerDisconnected(NetworkPeer peer, Phase phase)
-    {
-        if (phase == Phase.Begin)
-        {
-            int identityId = EntityListDic[peer.Id].identityId;
-            var identity = NetworkManager.Server.GetIdentity(identityId);
-            EntityListDic.Remove(peer.Id);
-            identity.Destroy();
-        }
-    }
-    [Server(ConstantsGame.TANK_LOGIN)]
+    // protected override void OnServerPeerDisconnected(NetworkPeer peer, Phase phase)
+    // {
+    //     if (phase == Phase.Begin)
+    //     {
+    //         int identityId = EntityListDic[peer.Id].identityId;
+    //         var identity = NetworkManager.Server.GetIdentity(identityId);
+    //         EntityListDic.Remove(peer.Id);
+    //         identity.Destroy();
+    //     }
+    // }
+
+    [Server(ConstantsGame.LOGIN)]
     void LoginRPCServer(DataBuffer buffer, NetworkPeer peer)
     {
-        Matchmaking.Server.JoinGroup(group, peer);
-        var identity = NetworkManager.GetPrefab(0).SpawnOnServer(peer);
-        var playerServer = identity.Get<PropertyServer>();
-        string name = buffer.ReadString();
-        int team = EntityListDic.Count % 2 == 0 ? 1 : 2;
-
-        playerServer.SetInfo(name, team == 1 ? spawn1 : spawn2, team);
-
-        buffer.SeekToBegin();
-        buffer.WriteIdentity(identity);
-
-        Remote.Invoke(ConstantsGame.TANK_LOGIN, peer, buffer, Target.GroupMembers);
-
-        buffer.SeekToBegin();
-
-        buffer.WriteAsBinary(EntityListDic);
-        buffer.WriteIdentity(bomb.Identity);
-        Remote.Invoke(ConstantsGame.TANK_LOGIN_ALL, peer, buffer, Target.Self);
-
-        EntityListDic.Add(peer.Id, new EntityList
+        if(peer.Data.TryGet<GroupManagerServer>("group", out var group)) return;
+        if (PlayerWaitForGame.Count == 0)
         {
-            peerId = peer.Id,
-            identityId = identity.IdentityId,
-            nameTank = name,
-            team = team
-        });
-
-        if (EntityListDic.Count >= 2)
-        {
-            StartGame();
+            groupAtual = NetworkManager.GetPrefab(4).SpawnOnServer(NetworkManager.Server.ServerPeer).Get<GroupManagerServer>();
         }
-    }
-    async void StartGame()
-    {
-        var buffer = NetworkManager.Pool.Rent();
-        buffer.Write(10);
-        Remote.Invoke(ConstantsGame.START_GAME, NetworkManager.Server.ServerPeer, buffer, groupId: group.Id);
-        buffer.Dispose();
-        await UniTask.WaitForSeconds(10);
-        Remote.Invoke(ConstantsGame.END_GAME, NetworkManager.Server.ServerPeer, groupId: group.Id);
-    }
+        peer.Data["name"] = buffer.ReadString();
+        
+        peer.Data["group"] = groupAtual;
 
+        buffer.SeekToBegin();
+        buffer.WriteIdentity(groupAtual.Identity);
+        PlayerWaitForGame.Add(peer);
+
+        if (PlayerWaitForGame.Count >= qtdPlayers)
+        {
+            print("Zerei os players");
+            PlayerWaitForGame = new();
+        }
+        
+        Remote.Invoke(ConstantsGame.LOGIN, peer, buffer, Target.Self);
+        groupAtual.SetPeerInGroup(peer);
+    }
 }

@@ -56,7 +56,10 @@ public partial class PropertyClient : PropertiesBase
         if (!IsLocalPlayer) return;
         uI.SetHp(nextHp);
     }
-
+    protected override void OnBasePatenteChanged(int prevPatente, int nextPatente, bool isWriting)
+    {
+        uIPlayer.SetPatente(NetworkService.Get<Patentes>().SetPatentes(nextPatente));
+    }
     protected override void OnBaseBulletPentChanged(int prevBulletPent, int nextBulletPent, bool isWriting)
     {
         if (!IsLocalPlayer) return;

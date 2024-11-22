@@ -36,7 +36,11 @@ public partial class TankBase : NetworkBehaviour
         if (!IsLocalPlayer) rotationDuration = 0.1f;
         rotateHeadTank.DORotate(Vector3.forward * angle, rotationDuration, RotateMode.Fast);
     }
-
+    public void HeadRotateServer(float angle)
+    {
+        if (!IsServer) return;
+        rotateHeadTank.rotation = Quaternion.Euler(new Vector3(0,0,angle));
+    }
     public void TankRotate(Vector2 dir)
     {
         if (dir == Vector2.zero) return;

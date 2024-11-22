@@ -32,6 +32,8 @@ public partial class PropertiesBase : NetworkBehaviour
     protected TankBase tankBase;
     [NetworkVariable]
     public bool m_Death = false;
+    [NetworkVariable]
+    protected int m_Patente = 26;
     protected bool refresh = false;
     protected Transform spawnInitial;
     [NetworkVariable]

@@ -9,7 +9,7 @@ public class UIPlayer : MonoBehaviour
     [SerializeField]
     private Image imgHpFilled, imgFilledOrange;
     [SerializeField]
-    private Image imgMpFilled;
+    private Image imgMpFilled, imagePatente;
     [SerializeField]
     private float vel = 1;
     [SerializeField]
@@ -64,5 +64,8 @@ public class UIPlayer : MonoBehaviour
     public void SetName(string nameTank)
     {
         nameTankText.text = nameTank;
+    }
+    public void SetPatente(Sprite sprite){
+        imagePatente.sprite = sprite;
     }
 }

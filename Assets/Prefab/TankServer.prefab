@@ -166,7 +166,7 @@ MonoBehaviour:
   rotateHeadTank: {fileID: 8606178663341609621}
   mira: {fileID: 1040804012873880975}
   tankRotate: {fileID: 8606178664823677642}
-  rotationDuration: 0.1
+  rotationDuration: 0
   moveSpeed: 5
   smoothTime: 1.5
 --- !u!114 &2113164111875035594

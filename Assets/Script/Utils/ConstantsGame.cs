@@ -2,7 +2,8 @@ using UnityEngine;
 
 public static class ConstantsGame
 {
-    public const byte TANK_LOGIN             = 0;
+    public const byte LOGIN                  = 7;
+    public const byte TANK_SPAWN             = 0;
     public const byte TANK_MOVE              = 1;
     public const byte TANK_MOVE_ROT          = 2;
     public const byte TANK_BULLET            = 3;

@@ -132,6 +132,8 @@ MonoBehaviour:
   tankClient: {fileID: 0}
   distance: 3
   vel: 0
+  m_Team: 0
+  groupManager: {fileID: 0}
   detectionRadius: 0.5
   targetLayer:
     serializedVersion: 2
