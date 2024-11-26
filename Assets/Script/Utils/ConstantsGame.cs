@@ -9,7 +9,7 @@ public static class ConstantsGame
     public const byte TANK_BULLET            = 3;
     public const byte TANK_BULLET_INST       = 4;
     public const byte TANK_BULLET_DEMAGE     = 4;
-    public const byte TANK_LOGIN_ALL         = 5;
+    public const byte TANK_SPAWN_BOMB         = 5;
     public const byte TANK_CORRECT_MOVIMENT  = 6;
 
     //GAME

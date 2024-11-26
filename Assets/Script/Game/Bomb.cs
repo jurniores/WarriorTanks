@@ -122,6 +122,8 @@ public partial class Bomb : NetworkBehaviour
             if (spawn.team != Team)
             {
                 //Lógica de vitória e derrota
+                //Servidor
+                groupManager.EndGame(true);
                 Remote.Invoke(ConstantsGame.END_GAME);
             }
         }
@@ -136,6 +138,8 @@ public partial class Bomb : NetworkBehaviour
     [Client(ConstantsGame.END_GAME)]
     void EndGameBombRPC(DataBuffer buffer)
     {
+        //Client
+        print("End game no cliente");
         groupManager.EndGame(true);
     }
 

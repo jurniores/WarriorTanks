@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class GroupManager : NetworkBehaviour
 {
-    public List<TankBase> team1, 
-    team2;
+    public List<TankBase> team1, team2;
+    public Bomb bomb;
 
     public void SendClientStartGame()
     {
         Remote.Invoke(ConstantsGame.START_GAME);
     }
-    public void EndGame(bool teamCounter)
+    public virtual void EndGame(bool teamCounter)
     {
-        // foreach (var tkClient in listTankClient.Values)
-        // {
-        //     tkClient.FinishGame(bomb.Team, teamCounter);
-        // }
+        team1.ForEach(tank =>
+         {
+            tank.FinishGame(bomb.Team, teamCounter);
+         });
+        team2.ForEach(tank =>
+        {
+            tank.FinishGame(bomb.Team, teamCounter);
+        });
     }
 }

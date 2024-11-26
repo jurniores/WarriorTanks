@@ -10,6 +10,7 @@ public class TankClient : TankBase
     private Vector2 move, lastMove;
     public float moveSpeed = 5f;
     public float smoothTime = 1.5f;
+ 
     private Vector2 currentVelocity = Vector2.zero;
     private Vector2 directionToMouse;
     protected override void OnStart()
@@ -149,7 +150,7 @@ public class TankClient : TankBase
         transform.position = correctMoviment;
     }
 
-    public void FinishGame(int team, bool teamCounter)
+    public override void FinishGame(int team, bool teamCounter)
     {
         if (!IsLocalPlayer) return;
         var panelWin = NetworkService.Get<PanelWin>();

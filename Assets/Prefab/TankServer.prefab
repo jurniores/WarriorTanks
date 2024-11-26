@@ -161,6 +161,7 @@ MonoBehaviour:
   m_ServiceName: TankServer
   m_Id: 0
   m_BindingFlags: 52
+  groupManager: {fileID: 0}
   propertiesBase: {fileID: 2113164111875035594}
   velocity: 5
   rotateHeadTank: {fileID: 8606178663341609621}

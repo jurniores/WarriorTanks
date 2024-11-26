@@ -13,7 +13,7 @@ public class ClientLogin : ClientBehaviour
     [SerializeField]
     private Button button;
     [SerializeField]
-    private GameObject panel;
+    private PanelLogin panel;
     private GroupManagerClient groupManagerClient;
     public Texture2D cursorTexture;
 
@@ -21,15 +21,17 @@ public class ClientLogin : ClientBehaviour
     protected override void OnStart()
     {
         SetCurtor(false);
-        button.onClick.AddListener(Login);
+        panel = NetworkService.Get<PanelLogin>();
+       
     }
 
-    private void Login()
+    public void Login()
     {
         if (!string.IsNullOrEmpty(inputField.text) || inputField.text.Length > 4)
         {
             using var buffer = NetworkManager.Pool.Rent();
             buffer.WriteString(inputField.text);
+            buffer.Write(panel.typeRoom);
             Local.Invoke(ConstantsGame.LOGIN, buffer);
         }
     }
@@ -38,6 +40,7 @@ public class ClientLogin : ClientBehaviour
     {
         buffer.ReadIdentity(out var peerId, out var identityId);
         groupManagerClient = NetworkManager.GetPrefab(5).SpawnOnClient(peerId, identityId).Get<GroupManagerClient>();
+        panel.RecieveLoginSend();
     }
 
     public void SetCurtor(bool active)

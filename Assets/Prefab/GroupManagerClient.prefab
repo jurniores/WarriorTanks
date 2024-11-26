@@ -50,6 +50,7 @@ MonoBehaviour:
   m_BindingFlags: 38
   team1: []
   team2: []
+  bomb: {fileID: 0}
   panel: {fileID: 0}
   cursorTexture: {fileID: 0}
 --- !u!114 &6985889081764804202

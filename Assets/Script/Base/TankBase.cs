@@ -10,8 +10,8 @@ public partial class TankBase : NetworkBehaviour
 
     [NetworkVariable]
     protected Vector2 m_MoveNow;
-    [SerializeField]
-    protected PropertiesBase propertiesBase;
+   public GroupManager groupManager;
+    public PropertiesBase propertiesBase;
     protected float angleTank;
     [SerializeField]
     protected float velocity;
@@ -39,7 +39,7 @@ public partial class TankBase : NetworkBehaviour
     public void HeadRotateServer(float angle)
     {
         if (!IsServer) return;
-        rotateHeadTank.rotation = Quaternion.Euler(new Vector3(0,0,angle));
+        rotateHeadTank.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
     public void TankRotate(Vector2 dir)
     {
@@ -60,4 +60,5 @@ public partial class TankBase : NetworkBehaviour
     {
         MoveNow = posInitial.position;
     }
+    public virtual void FinishGame(int team, bool teamCounter){}
 }

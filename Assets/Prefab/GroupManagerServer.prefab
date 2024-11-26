@@ -50,8 +50,10 @@ MonoBehaviour:
   m_BindingFlags: 38
   team1: []
   team2: []
+  bomb: {fileID: 0}
   timeBattle: 60
-  qtdPlayers: 1
+  nameGroup: 
+  qtdPlayers: 2
 --- !u!114 &7480228738197017358
 MonoBehaviour:
   m_ObjectHideFlags: 0
