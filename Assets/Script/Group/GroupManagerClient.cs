@@ -1,19 +1,22 @@
 using System.Collections.Generic;
-
+using Microsoft.Unity.VisualStudio.Editor;
 using Omni.Core;
 using UnityEngine;
 
 public class GroupManagerClient : GroupManager
 {
     [SerializeField]
-    private PanelLogin panel;
+    private Dictionary<int, TankClient> listTankClient = new();
+    [SerializeField]
+    private GameObject panel;
     private GameInfo gameInfo;
     public Texture2D cursorTexture;
+    private Bomb bomb;
 
     protected override void OnStart()
     {
         gameInfo = NetworkService.Get<GameInfo>();
-        panel = panel = NetworkService.Get<PanelLogin>();
+        panel = GameObject.Find("Panel");
 
     }
 
@@ -29,38 +32,33 @@ public class GroupManagerClient : GroupManager
         gameInfo.SetInfoTime(time);
     }
 
-    [Client(ConstantsGame.TANK_SPAWN_BOMB)]
+    [Client(ConstantsGame.TANK_LOGIN_ALL)]
     void LoginRpcAllClient(DataBuffer buffer)
     {
+        var players = buffer.ReadAsBinary<Dictionary<int, EntityList>>();
         buffer.ReadIdentity(out var peerId, out var identityId);
 
         //Instanciando a bomba
         bomb = NetworkManager.GetPrefab(3).SpawnOnClient(peerId, identityId).Get<Bomb>();
-        bomb.groupManager = this;
+
+        foreach (var player in players.Values)
+        {
+            SpawnOnClient(player.peerId, player.identityId);
+        }
     }
-    void SpawnOnClient(int peerId, int identityId, int team)
+    void SpawnOnClient(int peerId, int identityId)
     {
         var tankClient = NetworkManager.GetPrefab(1).SpawnOnClient(peerId, identityId).Get<TankClient>();
-        tankClient.groupManager = this;
-         if (team == 1)
-        {
-            team1.Add(tankClient);
-        }
-        else
-        {
-            team2.Add(tankClient);
-        }
+        listTankClient.Add(peerId, tankClient);
     }
-
+    
     [Client(ConstantsGame.TANK_SPAWN)]
     void LoginRpcClient(DataBuffer buffer)
     {
         buffer.ReadIdentity(out var peerId, out var identityId);
-        int team = buffer.Read<int>();
-        print("peer vindo para mim " + peerId);
-        SpawnOnClient(peerId, identityId, team);
-        panel.transform.parent.gameObject.SetActive(false);
-
+        SpawnOnClient(peerId, identityId);
+        panel.SetActive(false);
+        
     }
 
 
@@ -69,8 +67,6 @@ public class GroupManagerClient : GroupManager
     {
         EndGame(false);
     }
-
-    
 
 
 }
